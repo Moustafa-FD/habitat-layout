@@ -1,9 +1,10 @@
-import React, { Suspense, useRef, useEffect } from "react";
+import React, { Suspense, useRef, useEffect, useState } from "react";
 import { Canvas, useThree } from "@react-three/fiber";
 import { OrbitControls, useGLTF } from "@react-three/drei";
+import { GLTFExporter } from "three/examples/jsm/exporters/GLTFExporter";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Download } from "lucide-react";
 import * as THREE from "three";
 
 // Simple test component to load GLB files from layout data
@@ -13,9 +14,12 @@ function TestModule({ module }: { module: any }) {
   
   const { scene } = useGLTF(`/assets/${glbFile}`);
   
+  // Clone the scene for each instance to allow duplicates
+  const clonedScene = React.useMemo(() => scene.clone(true), [scene]);
+  
   return (
     <primitive 
-      object={scene} 
+      object={clonedScene} 
       position={[module.x || 0, 0, module.y || 0]}
       rotation={[0, module.rotation || 0, 0]}
     />
@@ -91,6 +95,7 @@ function CameraController({ modules }: { modules: any[] }) {
 export default function View3DTest() {
   const navigate = useNavigate();
   const location = useLocation();
+  const [sceneRef, setSceneRef] = useState<THREE.Scene | null>(null);
   
   // Get layout state from navigation state
   const layoutState = location.state?.layoutState || {
@@ -101,6 +106,45 @@ export default function View3DTest() {
     selectedMainModuleId: null,
     selectedSubModuleId: null,
     zoomedModuleId: null
+  };
+
+  const exportGLB = () => {
+    if (!sceneRef) {
+      console.warn('Scene not ready for export');
+      return;
+    }
+
+    try {
+      const exporter = new GLTFExporter();
+      const options = {
+        binary: true,
+        includeCustomExtensions: true,
+      };
+
+      exporter.parse(
+        sceneRef,
+        (glb) => {
+          // Create download link
+          const blob = new Blob([glb as ArrayBuffer], { type: 'application/octet-stream' });
+          const url = URL.createObjectURL(blob);
+          const link = document.createElement('a');
+          link.href = url;
+          link.download = `space-station-layout-${Date.now()}.glb`;
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+          URL.revokeObjectURL(url);
+          
+          console.log('✅ Space station layout exported successfully!');
+        },
+        (error) => {
+          console.error('❌ Export failed:', error);
+        },
+        options
+      );
+    } catch (error) {
+      console.error('❌ Export error:', error);
+    }
   };
 
   return (
@@ -122,11 +166,18 @@ export default function View3DTest() {
             Habitat Layout Builder - 3D Test
           </h1>
         </div>
+
+        <div className="flex items-center gap-2">
+          <Button onClick={exportGLB} variant="default" size="sm">
+            <Download className="w-4 h-4 mr-2" />
+            Export Complete Station
+          </Button>
+        </div>
       </div>
 
       {/* 3D Canvas */}
       <div className="flex-1">
-        <Canvas camera={{ position: [0, 2, 10], fov: 60 }}>
+        <Canvas camera={{ position: [0, 2, 10], fov: 60 }} onCreated={({ scene }) => setSceneRef(scene)}>
           <Suspense fallback={null}>
             {layoutState.mainModules.map((module, index) => (
               <TestModule key={module.instanceId || index} module={module} />

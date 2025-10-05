@@ -1,7 +1,7 @@
 import React, { Suspense, useEffect, useMemo, useState, useRef } from "react";
 import { Canvas, useThree } from "@react-three/fiber";
 import { OrbitControls, useGLTF } from "@react-three/drei";
-// import { GLTFExporter } from "three/examples/jsm/exporters/GLTFExporter";
+import { GLTFExporter } from "three/examples/jsm/exporters/GLTFExporter";
 import * as THREE from "three";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -186,6 +186,7 @@ function LoadedModule({
 }) {
   try {
     const { scene } = useGLTF(`/assets/${glbFile}`);
+    // Clone the scene for each instance to allow duplicates
     const cloned = useMemo(() => scene.clone(true), [scene]);
 
     // Measure original size from authoring (no scaling/recenter applied)
@@ -408,8 +409,42 @@ export default function View3D() {
   };
 
   const exportGLB = () => {
-    console.log('Export functionality temporarily disabled - will be re-enabled once basic 3D view is working');
-    // TODO: Re-enable export functionality
+    if (!sceneRef) {
+      console.warn('Scene not ready for export');
+      return;
+    }
+
+    try {
+      const exporter = new GLTFExporter();
+      const options = {
+        binary: true,
+        includeCustomExtensions: true,
+      };
+
+      exporter.parse(
+        sceneRef,
+        (glb) => {
+          // Create download link
+          const blob = new Blob([glb as ArrayBuffer], { type: 'application/octet-stream' });
+          const url = URL.createObjectURL(blob);
+          const link = document.createElement('a');
+          link.href = url;
+          link.download = `space-station-layout-${Date.now()}.glb`;
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+          URL.revokeObjectURL(url);
+          
+          console.log('✅ Space station layout exported successfully!');
+        },
+        (error) => {
+          console.error('❌ Export failed:', error);
+        },
+        options
+      );
+    } catch (error) {
+      console.error('❌ Export error:', error);
+    }
   };
 
   const exportIndividualGLBs = () => {
@@ -440,9 +475,9 @@ export default function View3D() {
         <div className="flex items-center gap-2">
           <Button onClick={exportGLB} variant="default" size="sm">
             <Download className="w-4 h-4 mr-2" />
-            Export Full GLB
+            Export Complete Station
           </Button>
-          <Button onClick={exportIndividualGLBs} variant="outline" size="sm">
+          <Button onClick={exportIndividualGLBs} variant="outline" size="sm" disabled>
             <Download className="w-4 h-4 mr-2" />
             Export Individual Modules
           </Button>
