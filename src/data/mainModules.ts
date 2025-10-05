@@ -16,6 +16,7 @@ export interface MainModule {
   depth: number; // meters (length in your specs)
   height: number; // meters
   volume: number; // m³ internal volume
+  mass: number; // kg
   category: 'wardroom' | 'hygiene' | 'galley' | 'medical' | 'maintenance' | 'storage' | 'social' | 'habitat';
   color: string;
   ports: Port[];
@@ -33,6 +34,7 @@ export const mainModules: MainModule[] = [
     depth: 1.19,
     height: 1.91,
     volume: 10.09,
+    mass: 2800, // Dining module with furniture and equipment
     category: 'wardroom',
     color: '#F39C12',
     ports: [
@@ -54,6 +56,7 @@ export const mainModules: MainModule[] = [
     depth: 1.43,
     height: 2.51,
     volume: 4.34,
+    mass: 3200, // Hygiene module with plumbing and water systems
     category: 'hygiene',
     color: '#50C878',
     ports: [
@@ -75,6 +78,7 @@ export const mainModules: MainModule[] = [
     depth: 1.41,
     height: 1.91,
     volume: 4.35,
+    mass: 3500, // Galley module with food prep equipment and appliances
     category: 'galley',
     color: '#F5A623',
     ports: [
@@ -96,6 +100,7 @@ export const mainModules: MainModule[] = [
     depth: 1.45,
     height: 2.00,
     volume: 5.80,
+    mass: 4500, // Medical module with life support and medical equipment
     category: 'medical',
     color: '#1ABC9C',
     ports: [
@@ -117,6 +122,7 @@ export const mainModules: MainModule[] = [
     depth: 0.98,
     height: 1.91,
     volume: 4.35,
+    mass: 3800, // Maintenance module with tools and repair equipment
     category: 'maintenance',
     color: '#95A5A6',
     ports: [
@@ -138,6 +144,7 @@ export const mainModules: MainModule[] = [
     depth: 2.02,
     height: 2.31,
     volume: 6.00,
+    mass: 4200, // Storage module with logistics and cargo systems
     category: 'storage',
     color: '#7F8C8D',
     ports: [
@@ -159,6 +166,7 @@ export const mainModules: MainModule[] = [
     depth: 1.91,
     height: 1.49,
     volume: 10.09,
+    mass: 3400, // Social module with recreational equipment
     category: 'social',
     color: '#9B59B6',
     ports: [
@@ -180,6 +188,7 @@ export const mainModules: MainModule[] = [
     depth: 0.99,
     height: 2.00,
     volume: 1.80,
+    mass: 1800, // Private habitat with personal systems
     category: 'habitat',
     color: '#4A90E2',
     ports: [
@@ -201,6 +210,7 @@ export const mainModules: MainModule[] = [
     depth: 0.66,
     height: 2.00,
     volume: 1.20,
+    mass: 1600, // Private recreation with entertainment systems
     category: 'habitat',
     color: '#5C9FE8',
     ports: [
