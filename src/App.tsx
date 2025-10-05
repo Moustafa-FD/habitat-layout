@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import View3D from "./pages/View3D";
 import View3DTest from "./pages/View3DTest";
+import { OrbitalSimulator } from "./pages/OrbitalSimulator";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -20,6 +21,7 @@ const App = () => (
           <Route path="/" element={<Index />} />
           <Route path="/3d" element={<View3D />} />
           <Route path="/3d-test" element={<View3DTest />} />
+          <Route path="/orbital-simulator" element={<OrbitalSimulator />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

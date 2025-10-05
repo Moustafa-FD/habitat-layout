@@ -11,7 +11,8 @@ import {
   FolderOpen,
   Download,
   Box,
-  Users
+  Users,
+  Globe
 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { LayoutState } from '@/types/layout';
@@ -19,6 +20,7 @@ import { canSwitchTo3D } from '@/utils/validation';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { toast } from 'sonner';
 import { useNavigate } from 'react-router-dom';
+import { generateLayoutGLB } from '@/utils/layoutExport';
 
 interface ToolbarProps {
   layoutState: LayoutState;
@@ -123,6 +125,39 @@ export const Toolbar = ({ layoutState, onStateChange }: ToolbarProps) => {
     } else {
       toast.error(`Cannot switch to 3D: ${errors.length} error(s) remaining`);
     }
+  };
+
+  const handleSwitchToOrbitalSim = async () => {
+    if (!canSwitch) {
+      toast.error(`Cannot switch to orbital simulation: ${errors.length} error(s) remaining`);
+      return;
+    }
+
+    const simulationPromise = (async () => {
+      // Calculate total station mass from layout
+      const totalMass = layoutState.mainModules.reduce((sum, module) => sum + module.mass, 0);
+      
+      // Generate GLB model from layout
+      const { glbBlob, glbUrl } = await generateLayoutGLB(layoutState);
+      
+      // Navigate to orbital simulation with layout data and generated model
+      navigate('/orbital-simulator', { 
+        state: { 
+          layoutState,
+          stationMass: totalMass,
+          modelUrl: glbUrl,
+          modelBlob: glbBlob
+        } 
+      });
+      
+      return 'Orbital simulation launched!';
+    })();
+
+    toast.promise(simulationPromise, {
+      loading: 'Generating 3D model for orbital simulation...',
+      success: 'Orbital simulation launched with your custom station!',
+      error: 'Failed to generate 3D model. Please try again.'
+    });
   };
 
   const handleSave = () => {
@@ -238,14 +273,26 @@ export const Toolbar = ({ layoutState, onStateChange }: ToolbarProps) => {
 
         {/* 3D Switch */}
         <Button 
-          variant={canSwitch ? "default" : "secondary"} 
+          variant={canSwitch ? "outline" : "secondary"} 
           size="sm" 
           disabled={!canSwitch}
           onClick={handleSwitchTo3D}
-          title={canSwitch ? 'Switch to 3D view' : `Fix ${errors.length} error(s) first`}
+          title={canSwitch ? 'Switch to 3D test view' : `Fix ${errors.length} error(s) first`}
         >
           <Box className="w-4 h-4 mr-2" />
-          {canSwitch ? 'Switch to 3D' : `Fix ${errors.length} error(s)`}
+          {canSwitch ? '3D View' : `Fix ${errors.length} error(s)`}
+        </Button>
+        
+        {/* Orbital Simulation */}
+        <Button 
+          variant={canSwitch ? "default" : "secondary"} 
+          size="sm" 
+          disabled={!canSwitch}
+          onClick={handleSwitchToOrbitalSim}
+          title={canSwitch ? 'Launch orbital simulation with this layout' : `Fix ${errors.length} error(s) first`}
+        >
+          <Globe className="w-4 h-4 mr-2" />
+          {canSwitch ? 'Orbital Sim' : `Fix ${errors.length} error(s)`}
         </Button>
       </div>
     </div>
