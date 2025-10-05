@@ -17,7 +17,8 @@ export interface MainModule {
   height: number; // meters
   volume: number; // m³ internal volume
   mass: number; // kg
-  category: 'wardroom' | 'hygiene' | 'galley' | 'medical' | 'maintenance' | 'storage' | 'social' | 'habitat';
+  category: 'wardroom' | 'hygiene' | 'galley' | 'medical' | 'maintenance' | 'storage' | 'social' | 'habitat' | 'exercise' | 'mission' | 'command' | 'waste' | 'exercise' | 'power'
+  ;
   color: string;
   ports: Port[];
   allowedSubModules: string[]; // IDs of allowed sub-modules
@@ -221,7 +222,89 @@ export const mainModules: MainModule[] = [
     ],
     allowedSubModules: ['mirror-station', 'leisure-seat', 'locker'],
     maxConnections: 4
-  }
+  },
+// Spacecraft monitoring / commanding (NHV lists separate functional space)
+{
+  id: 'spacecraft-command',
+  name: 'Spacecraft Monitoring & Commanding',
+  shortName: 'Command',
+  width: 1.80, depth: 1.20, height: 1.58, volume: 3.42, // NHV
+  mass: 3000,
+  category: 'command', color: '#2C3E50',
+  ports: [
+    { id: 'cmd-n', type: 'std-port', position: 'north', x: 0.90, y: 0 },
+    { id: 'cmd-s', type: 'std-port', position: 'south', x: 0.90, y: 1.20 },
+    { id: 'cmd-e', type: 'std-port', position: 'east', x: 1.80, y: 0.60 },
+    { id: 'cmd-w', type: 'std-port', position: 'west', x: 0, y: 0.60 },
+  ],
+  allowedSubModules: ['command-console', 'comms-panel'],
+  maxConnections: 4
+},
+
+// Mission planning (table/work-surface planning often co-located with group table per NHV)
+{
+  id: 'mission-planning',
+  name: 'Mission Planning Module',
+  shortName: 'Planning',
+  width: 1.91, depth: 1.91, height: 1.49, volume: 10.09, // aligns to Group Table overlap incl. planning surface
+  mass: 3200,
+  category: 'mission', color: '#8E44AD',
+  ports: [
+    { id: 'plan-n', type: 'std-port', position: 'north', x: 0.955, y: 0 },
+    { id: 'plan-s', type: 'std-port', position: 'south', x: 0.955, y: 1.91 },
+    { id: 'plan-e', type: 'std-port', position: 'east', x: 1.91, y: 0.955 },
+    { id: 'plan-w', type: 'std-port', position: 'west', x: 0, y: 0.955 },
+  ],
+  allowedSubModules: ['mission-planning-surface', 'mission-console', 'dining-table'],
+  maxConnections: 4
+},
+
+
+// Append at end of mainModules[]:
+{
+  id: 'exercise-bay',
+  name: 'Exercise Bay (Single-Device Room)',
+  shortName: 'Exercise',
+  // Room sized to fit the largest single device space (Treadmill ~6.12 m³, NHV)
+  width: 1.60, depth: 1.60, height: 2.39, // ≈ 6.12 m³
+  volume: 6.12,
+  mass: 3000,
+  category: 'exercise',
+  color: '#1E8449',
+  ports: [
+    { id: 'ex-n', type: 'std-port', position: 'north', x: 0.80, y: 0 },
+    { id: 'ex-s', type: 'std-port', position: 'south', x: 0.80, y: 1.60 },
+    { id: 'ex-e', type: 'std-port', position: 'east',  x: 1.60, y: 0.80 },
+    { id: 'ex-w', type: 'std-port', position: 'west',  x: 0,     y: 0.80 }
+  ],
+  // Only exercise equipment can go here
+  allowedSubModules: ['cycle-ergometer','treadmill','resistive-device'],
+  maxConnections: 4
+},
+// Append to mainModules[]:
+{
+  id: 'power-generator',
+  name: 'Electrical Power Generation Module',
+  shortName: 'Generator',
+  width: 0.90,     // skinny width
+  depth: 3.20,     // long body
+  height: 1.80,
+  volume: 5.18,    // proportional internal volume
+  mass: 4300,      // structural & shielding mass
+  category: 'power',
+  color: '#D35400',
+  ports: [
+    { id: 'pow-n', type: 'svc-port', position: 'north', x: 0.45, y: 0 },
+    { id: 'pow-s', type: 'svc-port', position: 'south', x: 0.45, y: 3.20 },
+    { id: 'pow-e', type: 'std-port', position: 'east',  x: 0.90, y: 1.60 },
+    { id: 'pow-w', type: 'std-port', position: 'west',  x: 0,     y: 1.60 }
+  ],
+  allowedSubModules: [],
+  maxConnections: 4
+}
+
+
+
 ];
 
 export const canPortsConnect = (port1Type: PortType, port2Type: PortType): boolean => {

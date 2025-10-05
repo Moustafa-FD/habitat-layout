@@ -325,7 +325,11 @@ const moduleMapper: Record<string, string> = {
   "Storage": "Storage.glb",
   "Social": "Social.glb",
   "Vanity": "Vanity.glb",
-  "Recreation": "Recreation.glb"
+  "Recreation": "Recreation.glb",
+  "Command": "Command.glb",
+  "Planning": "Planning.glb",
+  "Exercise": "Exercise.glb",
+  "Generator": "Generator.glb"
 };
 
 // Camera controller to automatically focus on all modules

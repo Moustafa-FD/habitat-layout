@@ -95,6 +95,7 @@ const validateEssentials = (state: LayoutState): ValidationError[] => {
   const subIds = state.subModules.map(s => s.id);
   const mainIds = state.mainModules.map(m => m.id);
 
+  // Original requirements
   const minHygiene = Math.max(1, Math.ceil(state.crewSize / 3));
   const hygieneCount = mainIds.filter(id => id === 'hygiene').length;
   if (hygieneCount < minHygiene) {
@@ -107,6 +108,26 @@ const validateEssentials = (state: LayoutState): ValidationError[] => {
 
   if (mainIds.filter(id => id === 'medical').length < 1) {
     errors.push({ type: 'error', message: 'Need at least 1 medical module' });
+  }
+
+  // NEW REQUIREMENTS: Always required modules (regardless of crew size)
+  if (mainIds.filter(id => id === 'spacecraft-command').length < 1) {
+    errors.push({ type: 'error', message: 'Need at least 1 Command module (required for station operation)' });
+  }
+
+  if (mainIds.filter(id => id === 'mission-planning').length < 1) {
+    errors.push({ type: 'error', message: 'Need at least 1 Planning module (required for mission coordination)' });
+  }
+
+  if (mainIds.filter(id => id === 'exercise-bay').length < 1) {
+    errors.push({ type: 'error', message: 'Need at least 1 Exercise module (required for crew health)' });
+  }
+
+  // NEW REQUIREMENT: Generator rule (1 generator per 2 people)
+  const requiredGenerators = Math.ceil(state.crewSize / 2);
+  const generatorCount = mainIds.filter(id => id === 'power-generator').length;
+  if (generatorCount < requiredGenerators) {
+    errors.push({ type: 'error', message: `Need ${requiredGenerators} generator(s) for ${state.crewSize} crew (1 generator per 2 people), have ${generatorCount}` });
   }
 
   return errors;

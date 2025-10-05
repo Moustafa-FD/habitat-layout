@@ -8,7 +8,7 @@ export interface SubModule {
   depth: number; // meters (length in specs)
   height: number; // meters
   volume: number; // m³
-  category: 'hygiene' | 'dining' | 'storage' | 'maintenance' | 'habitat' | 'medical' | 'galley';
+  category: 'hygiene' | 'dining' | 'storage' | 'maintenance' | 'habitat' | 'medical' | 'galley' | 'exercise' | 'mission' | 'command' | 'waste' | 'exercise';
   color: string;
   allowedAnchors: AnchorType[];
   zAware: boolean; // whether height matters for placement
@@ -148,5 +148,116 @@ export const subModules: SubModule[] = [
     color: '#1ABC9C',
     allowedAnchors: ['floor'],
     zAware: true
-  }
+  },
+  {
+    id: 'cycle-ergometer',
+    name: 'Cycle Ergometer',
+    shortName: 'Cycle',
+    width: 0.60, depth: 1.10, height: 1.20, volume: 0.79,
+    category: 'exercise', color: '#2ECC71',
+    allowedAnchors: ['floor'], zAware: true
+  },
+  {
+    id: 'treadmill',
+    name: 'Treadmill',
+    shortName: 'Treadmill',
+    width: 0.90, depth: 1.60, height: 1.50, volume: 2.16,
+    category: 'exercise', color: '#27AE60',
+    allowedAnchors: ['floor'], zAware: true
+  },
+  {
+    id: 'resistive-device',
+    name: 'Resistive Exercise Device',
+    shortName: 'RED',
+    width: 1.20, depth: 1.20, height: 2.00, volume: 2.88,
+    category: 'exercise', color: '#1E8449',
+    allowedAnchors: ['floor','wall'], zAware: true
+  },
+  
+  // Mission planning & command/monitoring (table, console, comms)
+  {
+    id: 'mission-planning-surface',
+    name: 'Mission Planning Surface',
+    shortName: 'Plan Surface',
+    width: 1.20, depth: 0.80, height: 0.75, volume: 0.72,
+    category: 'mission', color: '#8E44AD',
+    allowedAnchors: ['floor'], zAware: false
+  },
+  {
+    id: 'mission-console',
+    name: 'Mission Console',
+    shortName: 'Mission Console',
+    width: 1.00, depth: 0.60, height: 1.20, volume: 0.72,
+    category: 'mission', color: '#9B59B6',
+    allowedAnchors: ['floor','wall'], zAware: true
+  },
+  {
+    id: 'command-console',
+    name: 'Command & Control Console',
+    shortName: 'C2 Console',
+    width: 1.00, depth: 0.60, height: 1.20, volume: 0.72,
+    category: 'command', color: '#34495E',
+    allowedAnchors: ['floor','wall'], zAware: true
+  },
+  {
+    id: 'comms-panel',
+    name: 'Comms Panel',
+    shortName: 'Comms',
+    width: 0.80, depth: 0.30, height: 1.20, volume: 0.29,
+    category: 'command', color: '#2C3E50',
+    allowedAnchors: ['wall'], zAware: true
+  },
+  
+  // Private habitation (sleep & small desk in quarters)
+  {
+    id: 'sleep-berth',
+    name: 'Crew Sleep Berth',
+    shortName: 'Berth',
+    width: 0.80, depth: 2.10, height: 1.10, volume: 1.85,
+    category: 'habitat', color: '#4A90E2',
+    allowedAnchors: ['floor'], zAware: true
+  },
+  {
+    id: 'personal-work-surface',
+    name: 'Personal Work Surface',
+    shortName: 'Desk',
+    width: 1.00, depth: 0.60, height: 0.75, volume: 0.45,
+    category: 'habitat', color: '#5C9FE8',
+    allowedAnchors: ['floor'], zAware: false
+  },
+  
+  // Human waste & waste management
+  {
+    id: 'handwash-station',
+    name: 'Handwash Station',
+    shortName: 'Handwash',
+    width: 0.60, depth: 0.40, height: 1.20, volume: 0.29,
+    category: 'hygiene', color: '#50C878',
+    allowedAnchors: ['floor','wall'], zAware: true
+  },
+{
+  id: 'cycle-ergometer',
+  name: 'Cycle Ergometer',
+  shortName: 'Cycle',
+  width: 0.60, depth: 1.10, height: 1.20, volume: 0.79,
+  category: 'exercise', color: '#2ECC71',
+  allowedAnchors: ['floor'], zAware: true
+},
+{
+  id: 'treadmill',
+  name: 'Treadmill',
+  shortName: 'Treadmill',
+  width: 0.90, depth: 1.60, height: 1.50, volume: 2.16,
+  category: 'exercise', color: '#27AE60',
+  allowedAnchors: ['floor'], zAware: true
+},
+{
+  id: 'resistive-device',
+  name: 'Resistive Exercise Device',
+  shortName: 'RED',
+  width: 1.20, depth: 1.20, height: 2.00, volume: 2.88,
+  category: 'exercise', color: '#1E8449',
+  allowedAnchors: ['floor','wall'], zAware: true
+}
+
 ];

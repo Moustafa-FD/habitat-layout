@@ -551,9 +551,27 @@ interface LayoutData {
   moduleCount: number;
 }
 
+// Module mapping from shortName to GLB file
+const moduleMapper: Record<string, string> = {
+  "Wardroom": "Wardroom.glb",
+  "Hygiene": "Hygiene.glb",
+  "Galley": "Galley.glb",
+  "Medical": "Medical.glb",
+  "Maintenance": "Maintenance.glb",
+  "Storage": "Storage.glb",
+  "Social": "Social.glb",
+  "Vanity": "Vanity.glb",
+  "Recreation": "Recreation.glb",
+  "Command": "Command.glb",
+  "Planning": "Planning.glb",
+  "Exercise": "Exercise.glb",
+  "Generator": "Generator.glb"
+};
+
 // Component to load individual module GLB files
 function LayoutModule({ module }: { module: LayoutModuleData }) {
-  const glbFile = module.glbFile;
+  // Use moduleMapper to get glbFile from shortName if glbFile is not provided
+  const glbFile = module.glbFile || moduleMapper[module.shortName];
   
   // Always call useGLTF to avoid conditional hooks
   const gltfResult = useGLTF(glbFile ? `/assets/${glbFile}` : '/assets/test.glb');
