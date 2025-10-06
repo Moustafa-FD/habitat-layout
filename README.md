@@ -174,7 +174,7 @@ habitat-layout-builder/
 
 ```bash
 # Clone the repository
-git clone https://github.com/Harkit2004/habitat-layout-builder.git
+git clone https://github.com/Moustafa-FD/habitat-layout.git
 cd habitat-layout-builder
 
 # Install dependencies
