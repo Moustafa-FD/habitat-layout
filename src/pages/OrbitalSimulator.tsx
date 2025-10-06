@@ -649,7 +649,7 @@ function LayoutStation({ layoutDataUrl }: { layoutDataUrl: string }) {
   }
   
   return (
-    <group ref={groupRef} scale={[0.5, 0.5, 0.5]}>
+    <group ref={groupRef} scale={[0.25, 0.25, 0.25]}>
       {layoutData.modules.map((module: LayoutModuleData, index: number) => {
         // Offset each module by the station center to center the whole station at origin
         const centeredModule = {
